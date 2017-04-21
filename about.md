@@ -4,4 +4,4 @@ title: About
 permalink: /about/
 ---
 
-Tech musings
+Tech musings. A learning experiment.
