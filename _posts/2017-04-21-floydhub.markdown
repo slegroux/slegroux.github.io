@@ -7,8 +7,10 @@ categories: deep learning
 ## Intro
 
 We want to automatically generate original text based on Nietzsche's corpus. We will use a LSTM using Keras to model a character generator.
-![My helpful screenshot]({{ site.url }}/assets/keras-logo-small.jpg =20x20))
-![My helpful screenshot]({{ site.url }}/assets/floyd_hub.jpg =20x20))
+
+![My helpful screenshot]({{ site.url }}/assets/keras-logo-small.jpg))
+
+![My helpful screenshot]({{ site.url }}/assets/floyd_hub.jpg))
 
 ## Setup
 
