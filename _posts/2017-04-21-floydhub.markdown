@@ -4,11 +4,11 @@ title:  "Deep Learning with Floydhub"
 date:   2017-04-21 15:17:33 -0700
 categories: deep learning
 ---
-# Intro
+## Intro
 
 We want to automatically generate original text based on Nietzsche's corpus. We will use a LSTM using Keras to model a character generator.
 
-# Setup
+## Setup
 
 - While looking for options to test deep learning training with GPU I came accross [FloydHub](http://www.floydhub.com), the Heroku for deep learning. It is easier to setup than AWS gpu instances.
 - Install and get started [here](http://docs.floydhub.com/home/getting_started/)
@@ -28,18 +28,18 @@ floyd status
 floyd data status
 ```
 
-# Run jupyter notebook on GPU
+## Run jupyter notebook on GPU
 
 ```bash
 floyd run --data ID --mode jupyter
 ```
 Which will give an URL to access the jupyter notebook
 
-# Modeling
+## Modeling
 - We will use keras library for deep learning
 - install keras and numpy if not already done
 
-## module imports
+### Module imports
 
 ```python
 import pandas as pd
@@ -58,7 +58,7 @@ print K.backend()
 %matplotlib inline
 ```
 
-## Data 
+### Data 
 
 ```python
     data_path = "/INPUT/nietzsche.txt"
