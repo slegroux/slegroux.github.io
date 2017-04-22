@@ -13,7 +13,7 @@ We want to automatically generate original text based on Nietzsche's corpus. We 
 - While looking for options to test deep learning training with GPU I came accross [FloydHub](http://www.floydhub.com), the Heroku for deep learning. It is easier to setup than AWS gpu instances.
 - Install and get started [here](http://docs.floydhub.com/home/getting_started/)
 
-``` sh
+```sh
 mkdir PROJECT_DIR
 cd PROJECT_DIR
 floyd login
@@ -30,7 +30,7 @@ floyd data status
 
 # Run jupyter notebook on GPU
 
-``` bash
+```bash
 floyd run --data ID --mode jupyter
 ```
 Which will give an URL to access the jupyter notebook
@@ -41,7 +41,7 @@ Which will give an URL to access the jupyter notebook
 
 ## module imports
 
-``` python
+```python
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
@@ -60,7 +60,7 @@ print K.backend()
 
 ## Data 
 
-``` python
+```python
     data_path = "/INPUT/nietzsche.txt"
     text = open(path).read()
     print('Corpus length:', len(text))
