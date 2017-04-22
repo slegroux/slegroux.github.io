@@ -67,5 +67,99 @@ print K.backend()
     chars = sorted(list(set(text)))
     vocab_size = len(chars)
     print('Total unique chars:', vocab_size)
-    indices_from_chars = dict((c,i) for i, c in enumerate(chars))
+    char2index = dict((c,i) for i, c in enumerate(chars))
 ```
+
+```python
+sub_text = [char2indices[c] for c in text[:]]
+input_length = 100
+X = []
+y = []
+for i in range(0, len(sub_text) - input_length):
+    X.append(sub_text[i:i+input_length])
+    y.append(sub_text[i+input_length])
+```
+
+```python
+# reshape X to be [samples, time steps, features]
+X = np.reshape(X, (len(X), input_length, 1))
+# normalize
+X = X / float(vocab_size)
+# one hot encode the output variable
+y = np_utils.to_categorical(y)
+```
+
+### LSTM architecture
+
+
+```python
+n_hidden = 256
+model = Sequential()
+model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2])))
+model.add(Dropout(0.2))
+model.add(Dense(y.shape[1], activation='softmax'))
+model.compile(loss='categorical_crossentropy', optimizer='adam')
+```
+
+
+```python
+# define checkpoint: for long training save when improvement in loss
+filepath="weights-improvement-{epoch:02d}-{loss:.4f}.hdf5"
+checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
+callbacks_list = [checkpoint]
+```
+
+
+```python
+model.fit(X, y, epochs=1, batch_size=128, callbacks=callbacks_list)
+```
+
+    Epoch 1/2
+    600704/600801 [============================>.] - ETA: 1s - loss: 2.9326Epoch 00000: loss improved from inf to 2.93258, saving model to weights-improvement-00-2.9326.hdf5
+    600801/600801 [==============================] - 7517s - loss: 2.9326  
+    Epoch 2/2
+    600704/600801 [============================>.] - ETA: 1s - loss: 2.7955Epoch 00001: loss improved from 2.93258 to 2.79546, saving model to weights-improvement-01-2.7955.hdf5
+    600801/600801 [==============================] - 6237s - loss: 2.7955  
+
+
+
+
+
+    <keras.callbacks.History at 0x1159611d0>
+
+
+
+### Generate text
+
+
+```python
+filename = "weights-improvement-01-2.7955.hdf5"
+model.load_weights(filename)
+model.compile(loss='categorical_crossentropy', optimizer='adam')
+```
+
+
+```python
+# randomly pick initial sequence among input
+start = np.random.randint(0, len(X)-1)
+pattern = X[start] * vocab_size
+print pattern.shape
+print "Seed:"
+print "\"", ''.join([chars[int(c)] for c in pattern]),"\""
+# generate characters
+for i in range(100):
+    x = np.reshape(pattern, (1, len(pattern), 1))
+#     print "x: ", x.shape
+#     x = x / float(n_vocab)
+    prediction = model.predict(x, verbose=0)
+    index = np.argmax(prediction)
+    result = chars[index]
+    seq_in = [chars[int(value)] for value in pattern]
+    sys.stdout.write(result)
+    pattern = np.append(pattern,index)
+    pattern = pattern[1:len(pattern)]
+#     print "shape: ", pattern.shape
+    print "\nDone."
+```
+
+

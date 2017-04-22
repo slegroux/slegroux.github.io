@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "test!"
+title:  "First post test"
 date:   2017-04-21 15:17:33 -0700
 categories: jekyll testing first post
 ---
