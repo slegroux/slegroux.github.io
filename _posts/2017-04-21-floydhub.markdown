@@ -4,12 +4,14 @@ title:  "Deep character sequence generation using FloydHub and Keras"
 date:   2017-04-21 15:17:33 -0700
 categories: deep learning
 ---
+
+![keras]({{ site.url }}/assets/keras-logo-small.jpg)
+![floydhub]({{ site.url }}/assets/floyd_hub.jpg)
+
 ## Intro
 
 We want to automatically generate original text based on Nietzsche's corpus. We will use a LSTM using Keras to model a character generator.
 
-![keras]({{ site.url }}/assets/keras-logo-small.jpg)
-![floydhub]({{ site.url }}/assets/floyd_hub.jpg)
 
 ## Setup
 
