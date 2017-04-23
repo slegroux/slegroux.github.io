@@ -182,7 +182,7 @@ print "\nDone."
 ```
 
 {% if page.comments %}
-    <div id="disqus_thread"></div>
+<div id="disqus_thread"></div>
 <script>
 
 /**
