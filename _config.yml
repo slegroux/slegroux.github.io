@@ -23,6 +23,7 @@ twitter_username: slegroux
 github_username:  slegroux
 
 # Build settings
+highlighter: rouge
 markdown: kramdown
 theme: minima
 gems:
