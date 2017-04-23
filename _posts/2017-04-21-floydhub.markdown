@@ -13,27 +13,38 @@ categories: deep learning
 We want to automatically generate original text based on Nietzsche's corpus. We will use a LSTM using Keras to model a character generator.
 
 
-## Setup
+## Setup Floyd
 
-- While looking for options to test deep learning training with GPU I came accross [FloydHub](http://www.floydhub.com), the Heroku for deep learning. It is easier to setup than AWS gpu instances.
-- Install and get started [here](http://docs.floydhub.com/home/getting_started/)
+While looking for options to test deep learning training with GPU I came accross [Floyd](http://www.floydhub.com), the Heroku of deep learning. It is easier to setup than AWS gpu instances.
+
+Go to FloyHub [install instruction and tutorials](http://docs.floydhub.com/home/getting_started/) to get started
+
+Create a Floyd project directory
 
 ```sh
 mkdir PROJECT_DIR
 cd PROJECT_DIR
 floyd login
 floyd init PROJECT_NAME
+```
 
+Create a Floyd data directory and uplod text to /INPUT/
+
+```bash
 mkdir DATA_DIR
 cd DATA_DIR
 wget https://s3.amazonaws.com/text-datasets/nietzsche.txt
 floyd data init DATASET_NAME
+```
 
+Check status
+
+```sh
 floyd status
 floyd data status
 ```
 
-## Run jupyter notebook on GPU
+## Run jupyter notebook on GPU instance
 
 ```bash
 floyd run --data ID --mode jupyter
@@ -41,13 +52,13 @@ floyd run --data ID --mode jupyter
 Which will give an URL to access the jupyter notebook
 
 ## Modeling
-- We will use keras library for deep learning
-- install keras and numpy if not already done
+### Dependencies
+- We use Keras library for deep learning
+- check install instruction for [keras](https://keras.io/) and [numpy](http://www.numpy.org/) if necessary
 
 ### Module imports
 
 ```python
-import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
 from keras.utils.data_utils import get_file
@@ -63,20 +74,29 @@ print K.backend()
 %matplotlib inline
 ```
 
-### Data 
+### Data
+
+We will train our model on a text by Nietzsche.
+
+There are 600893 characters in the text. 84 of which are unique. 
 
 ```python
-    data_path = "/INPUT/nietzsche.txt"
-    text = open(path).read()
-    print('Corpus length:', len(text))
-    chars = sorted(list(set(text)))
-    vocab_size = len(chars)
-    print('Total unique chars:', vocab_size)
-    char2index = dict((c,i) for i, c in enumerate(chars))
+data_path = "/input/nietzsche.txt"
+text = open(data_path).read()
+print('Corpus length:', len(text))
+chars = sorted(list(set(text)))
+vocab_size = len(chars)
+print('Total unique chars:', vocab_size)
 ```
+We encode these chars as indices to feed the learning model using char2index map.
 
 ```python
-sub_text = [char2indices[c] for c in text[:]]
+char2index = dict((c,i) for i, c in enumerate(chars))
+```
+The feature vector is defined as 100 subsequent characters. The target is the 101th character.
+
+```python
+sub_text = [char2index[c] for c in text[:]]
 input_length = 100
 X = []
 y = []
@@ -84,28 +104,35 @@ for i in range(0, len(sub_text) - input_length):
     X.append(sub_text[i:i+input_length])
     y.append(sub_text[i+input_length])
 ```
+Reformat following keras/tensorflow convention and normalize features [0,1]
 
 ```python
 # reshape X to be [samples, time steps, features]
-X = np.reshape(X, (len(X), input_length, 1))
+X_ = np.reshape(X, (len(X), input_length, 1))
 # normalize
-X = X / float(vocab_size)
+X_ = X / float(vocab_size)
 # one hot encode the output variable
 y = np_utils.to_categorical(y)
 ```
 
 ### LSTM architecture
 
+We first try a simple LSTM architeture with 256 units in the LSTM layer, a dropout rate of 0.2 and a softmax predictor.
 
 ```python
 n_hidden = 256
+n_samples = 900
+n_features = 100
+n_depth = 1
+n_y = y.shape[1]
 model = Sequential()
-model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2])))
+model.add(LSTM(256, input_shape=(n_features, n_depth)))
 model.add(Dropout(0.2))
-model.add(Dense(y.shape[1], activation='softmax'))
+model.add(Dense(n_y, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam')
 ```
 
+We make sure to progressively save the weights as loss function decreases.
 
 ```python
 # define checkpoint: for long training save when improvement in loss
@@ -114,43 +141,29 @@ checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only
 callbacks_list = [checkpoint]
 ```
 
+Train with epochs and batch_size
 
 ```python
-model.fit(X, y, epochs=1, batch_size=128, callbacks=callbacks_list)
+model.fit(X, y, epochs=10, batch_size=128, callbacks=callbacks_list)
 ```
-
-    Epoch 1/2
-    600704/600801 [============================>.] - ETA: 1s - loss: 2.9326Epoch 00000: loss improved from inf to 2.93258, saving model to weights-improvement-00-2.9326.hdf5
-    600801/600801 [==============================] - 7517s - loss: 2.9326  
-    Epoch 2/2
-    600704/600801 [============================>.] - ETA: 1s - loss: 2.7955Epoch 00001: loss improved from 2.93258 to 2.79546, saving model to weights-improvement-01-2.7955.hdf5
-    600801/600801 [==============================] - 6237s - loss: 2.7955  
-
-
-
-
-
-    <keras.callbacks.History at 0x1159611d0>
-
 
 
 ### Generate text
-
+Load the weights that have been saved during the training phase.
 
 ```python
 filename = "weights-improvement-01-2.7955.hdf5"
 model.load_weights(filename)
 model.compile(loss='categorical_crossentropy', optimizer='adam')
 ```
-
+Once the model is trained we can use it to generate sequences of characters.
 
 ```python
 # randomly pick initial sequence among input
-start = np.random.randint(0, len(X)-1)
-pattern = X[start] * vocab_size
-print pattern.shape
-print "Seed:"
+start = np.random.randint(0, len(X_))
+pattern = X_[start] * (vocab_size + 1)
 print "\"", ''.join([chars[int(c)] for c in pattern]),"\""
+
 # generate characters
 for i in range(100):
     x = np.reshape(pattern, (1, len(pattern), 1))
@@ -164,7 +177,7 @@ for i in range(100):
     pattern = np.append(pattern,index)
     pattern = pattern[1:len(pattern)]
 #     print "shape: ", pattern.shape
-    print "\nDone."
+print "\nDone."
 ```
 
 
