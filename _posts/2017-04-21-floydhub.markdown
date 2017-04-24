@@ -52,6 +52,11 @@ floyd run --data ID --gpu --mode jupyter
 ```
 Which will give an URL to access the jupyter notebook
 
+## Run script on GPU instance
+```sh
+floyd run --data ID --gpu "python script.py"
+```
+
 ## Modeling
 ### Dependencies
 - We use Keras library for deep learning
@@ -145,7 +150,7 @@ callbacks_list = [checkpoint]
 Train with epochs and batch_size
 
 ```python
-model.fit(X, y, epochs=10, batch_size=128, callbacks=callbacks_list)
+model.fit(X_, y, epochs=10, batch_size=128, callbacks=callbacks_list)
 ```
 
 
