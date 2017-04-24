@@ -48,7 +48,7 @@ floyd data status
 ## Run jupyter notebook on GPU instance
 
 ```bash
-floyd run --data ID --mode jupyter
+floyd run --data ID --gpu --mode jupyter
 ```
 Which will give an URL to access the jupyter notebook
 
