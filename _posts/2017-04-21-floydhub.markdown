@@ -13,6 +13,13 @@ categories: deep learning
 
 We want to automatically generate original text based on Nietzsche's corpus. We will use a LSTM using Keras to model a character generator.
 
+1. TOC
+{:toc}
+
+$$
+\sum_n (x)
+$$
+
 
 ## Setup Floyd
 
