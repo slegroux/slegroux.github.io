@@ -14,27 +14,16 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 title: AI, Speech Recognition, and Health Technologies
-description: > # this means to ignore newlines until "baseurl:"
-  Data, AI, Sound, Health
+description: Data, AI, Sound, Health
 github_username: slegroux
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://slegroux.github.io"
 
 email: slegroux@ccrma.stanford.edu
 twitter_username: slegroux
 
 use_math: true
 
-# # Build settings
-# highlighter: rouge
-# markdown: kramdown
-# theme: minima
-# gems:
-#   - jekyll-feed
-# exclude:
-#   - Gemfile
-#   - Gemfile.lock
-# Everything below here can be ignored, unless you want to change the theme entirely
+google_analytics:
+
 theme: minima
 plugins:
   - jekyll-feed
