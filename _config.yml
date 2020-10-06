@@ -13,8 +13,8 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: AI, Speech Recognition, and Health Technologies
-description: Data, AI, Sound, Health
+title: AI, Speech Recognition, Music and Health
+description: AI, Speech, Music, Health
 github_username: slegroux
 
 email: slegroux@ccrma.stanford.edu
@@ -32,7 +32,7 @@ plugins:
   - jekyll-github-metadata
 
 titles_from_headings:
-  enabled:     true
+  enabled: true
   strip_title: true
   collections: true
 
