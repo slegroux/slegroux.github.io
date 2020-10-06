@@ -13,7 +13,7 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: Data, AI, Sound and Health Technologies
+title: AI, Speech Recognition, and Health Technologies
 email: slegroux@ccrma.stanford.edu
 description: > # this means to ignore newlines until "baseurl:"
   Data, AI, Sound, Health
@@ -21,13 +21,35 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://slegroux.github.io"
 twitter_username: slegroux
 github_username: slegroux
+use_math: true
 
-# Build settings
+# # Build settings
+# highlighter: rouge
+# markdown: kramdown
+# theme: minima
+# gems:
+#   - jekyll-feed
+# exclude:
+#   - Gemfile
+#   - Gemfile.lock
+# Everything below here can be ignored, unless you want to change the theme entirely
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-gist
+  - jekyll-octicons
+  - jekyll-github-metadata
+
+titles_from_headings:
+  enabled:     true
+  strip_title: true
+  collections: true
+
 highlighter: rouge
 markdown: kramdown
-theme: minima
-gems:
-  - jekyll-feed
-exclude:
-  - Gemfile
-  - Gemfile.lock
+kramdown:
+  math_engine: katex
+  input: GFM
+  auto_ids: true
+  hard_wrap: false
+  syntax_highlighter: rouge
